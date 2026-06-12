@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+
+# Node / Netlify
+node_modules/
+.netlify/
+*.log
+
+# Env / secrets
+.env
+.env.*
+
+# 내부 빌드 기획서 (공개 리포에서 제외 — fake door 전략 노출 방지)
+# 공개하려면 이 줄을 지우세요.
+CLAUDE.md
+
+# 로컬 데이터 내보내기
+syncargo-local-*.json
+syncargo-data-*.json
