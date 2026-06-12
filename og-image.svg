@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F5A623"/>
+      <stop offset="1" stop-color="#E04E2F"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="82%" cy="6%" r="60%">
+      <stop offset="0" stop-color="#F5A623" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#F5A623" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- 컨테이너 장식 (옅게) -->
+  <g opacity="0.06">
+    <rect x="880" y="430" width="300" height="78" rx="10" fill="#16223f"/>
+    <rect x="880" y="520" width="300" height="78" rx="10" fill="#5B7799"/>
+    <rect x="918" y="340" width="300" height="78" rx="10" fill="#F5A623"/>
+  </g>
+
+  <!-- 브랜드 -->
+  <g transform="translate(96, 96)">
+    <rect width="44" height="44" rx="12" fill="url(#mark)"/>
+    <text x="60" y="33" font-family="Pretendard, sans-serif" font-size="33" font-weight="700" fill="#16223f">SynCargo</text>
+  </g>
+
+  <!-- 배지 -->
+  <g transform="translate(96, 186)">
+    <rect width="376" height="42" rx="21" fill="#fff7ea" stroke="#f6dba6"/>
+    <text x="22" y="27" font-family="Pretendard, sans-serif" font-size="18" font-weight="600" fill="#e0930f">10~50인 포워딩사 비공개 베타 모집 중</text>
+  </g>
+
+  <!-- 헤드라인 -->
+  <text x="96" y="332" font-family="Pretendard, sans-serif" font-size="60" font-weight="700" fill="#16223f" letter-spacing="-2">직원이 퇴사해도,</text>
+  <rect x="92" y="372" width="712" height="26" fill="#F5A623" opacity="0.3"/>
+  <text x="96" y="402" font-family="Pretendard, sans-serif" font-size="60" font-weight="700" fill="#16223f" letter-spacing="-2">화주와의 관계는 회사에 남습니다</text>
+
+  <!-- 서브 -->
+  <text x="96" y="478" font-family="Pretendard, sans-serif" font-size="25" font-weight="400" fill="#626c80">Outlook 뒤에 붙는 AI 업무 레이어 · 흩어진 맥락을 B/L 단위 회사 자산으로</text>
+</svg>

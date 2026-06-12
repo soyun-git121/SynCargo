@@ -1,0 +1,6 @@
+# SynCargo — Netlify 설정 (정적 사이트 + 서버리스 함수)
+# 빌드 없음(바닐라 정적 파일). 함수는 의존성 0이라 번들링 불필요.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
