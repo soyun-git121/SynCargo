@@ -1,50 +1,81 @@
 /* ============================================================
    SynCargo — Fake Door 랜딩페이지 로직
-   - track() 래퍼 (PostHog 권장, 미설정 시 console + localStorage 큐)
+   - track() 래퍼 (Supabase 수집, 실패 시 localStorage 백업)
    - 스크롤 깊이 / CTA / 폼 이벤트 (CLAUDE.md §5)
    - 폼 검증 + 제출 플로우 (§4)
    ============================================================ */
 
 /* ---------- 분리 상수 (CLAUDE.md §8) ---------- */
-var FORM_ENDPOINT = "https://formspree.io/f/mjgdelob";  // Formspree (미설정 시 localStorage + mailto 폴백)
-var ANALYTICS_KEY = "phc_z6hYGtYuUKgDwQWYHaKgLoyHTMooHcgyGkC8Yu3UjFKS";  // PostHog project key (미설정 시 console.log + localStorage 큐)
-var ANALYTICS_HOST = "https://us.i.posthog.com";  // PostHog 리전 host (US Cloud)
+// 폼 제출 + 행동 이벤트를 모두 이 함수로 전송 → Supabase 에 저장 (단일 수집 경로).
+// 실패 시 localStorage 백업 + mailto 폴백.
+var INGEST_ENDPOINT = "/.netlify/functions/ingest";
 var CONTACT_EMAIL = "soyunbag066@gmail.com";
 
 (function () {
   "use strict";
 
   /* ============================================================
-     1. Analytics — track() 래퍼
+     1. Analytics — track() 래퍼 (Supabase 수집)
+     - track() → 메모리 큐 + localStorage 백업
+     - flush() → /ingest 로 배치 전송 (페이지 이탈에도 견디도록 sendBeacon / fetch keepalive)
      ============================================================ */
-  var posthogReady = false;
+  var queue = [];          // 아직 서버로 못 보낸 이벤트
+  var SESSION_ID = getSessionId();
 
-  function initAnalytics() {
-    if (!ANALYTICS_KEY) return; // 키 없으면 로컬 모드로만 동작
-    // PostHog 스니펫 (공식 최소형)
-    !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.async = !0, p.src = s.api_host + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
-    window.posthog.init(ANALYTICS_KEY, {
-      api_host: ANALYTICS_HOST,
-      capture_pageview: false,  // page_view는 track()에서 직접 발화 (referrer/utm 속성 포함)
-      persistence: "localStorage+cookie"
-    });
-    posthogReady = true;
+  function getSessionId() {
+    try {
+      var sid = sessionStorage.getItem("sc_sid");
+      if (!sid) {
+        sid = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
+        sessionStorage.setItem("sc_sid", sid);
+      }
+      return sid;
+    } catch (e) { return "nosession"; }
   }
 
   function track(eventName, props) {
     props = props || {};
-    // 공통 컨텍스트
-    props.path = location.pathname;
-    if (posthogReady && window.posthog) {
-      try { window.posthog.capture(eventName, props); } catch (e) { /* noop */ }
-    }
-    // 항상 로컬 큐에 백업 (키 미설정 환경에서도 분석 가능)
+    var ev = { name: eventName, props: props, path: location.pathname, session_id: SESSION_ID, ts: Date.now() };
+    queue.push(ev);
+    // 항상 로컬에도 백업 (전송 실패/오프라인 대비)
     try {
       var q = JSON.parse(localStorage.getItem("sc_events") || "[]");
-      q.push({ event: eventName, props: props, ts: Date.now() });
+      q.push({ event: eventName, props: props, ts: ev.ts });
       localStorage.setItem("sc_events", JSON.stringify(q.slice(-500)));
     } catch (e) { /* storage 불가 환경 */ }
-    if (!ANALYTICS_KEY) console.log("[track]", eventName, props);
+    scheduleFlush();
+  }
+
+  var flushTimer = null;
+  function scheduleFlush() {
+    if (flushTimer) return;
+    flushTimer = setTimeout(function () { flushTimer = null; flush(false); }, 1500);
+  }
+
+  // beacon=true 이면 페이지 이탈 중이므로 sendBeacon 사용(응답 불필요).
+  function flush(beacon) {
+    if (!queue.length) return;
+    var batch = queue.splice(0, queue.length);
+    var body = JSON.stringify({ events: batch });
+    var ok = false;
+    if (beacon && navigator.sendBeacon) {
+      try { ok = navigator.sendBeacon(INGEST_ENDPOINT, new Blob([body], { type: "application/json" })); } catch (e) {}
+    }
+    if (!ok) {
+      fetch(INGEST_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: body,
+        keepalive: true
+      }).catch(function () { /* 실패해도 localStorage 백업은 남아있음 */ });
+    }
+  }
+
+  function bindFlushLifecycle() {
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "hidden") flush(true);
+    });
+    window.addEventListener("pagehide", function () { flush(true); });
   }
 
   /* utm / referrer 수집 */
@@ -177,8 +208,8 @@ var CONTACT_EMAIL = "soyunbag066@gmail.com";
       }
 
       // 체크박스 그룹 1개 이상
-      if (!form.querySelector('input[name="risks"]:checked')) errors.push("가장 자주 발생하는 리스크를 1개 이상 선택해 주세요.");
-      if (!form.querySelector('input[name="context_channels"]:checked')) errors.push("업무 맥락이 남는 곳을 1개 이상 선택해 주세요.");
+      if (!form.querySelector('input[name="risks"]:checked')) errors.push("실제로 겪은 일을 1개 이상 선택해 주세요. (없다면 '해당 없음')");
+      if (!form.querySelector('input[name="context_channels"]:checked')) errors.push("합의 내용이 남는 곳을 1개 이상 선택해 주세요.");
 
       // 인터뷰 의향 라디오
       if (!form.querySelector('input[name="interview_ok"]:checked')) errors.push("인터뷰 참여 의향을 선택해 주세요.");
@@ -253,8 +284,7 @@ var CONTACT_EMAIL = "soyunbag066@gmail.com";
       var data = collect();
       saveLocal(data); // 항상 로컬 백업 먼저
 
-      // 주의: 회사명·이메일·연락처 등 개인정보(PII)는 PostHog로 보내지 않습니다.
-      // 연락처 명단은 Formspree에만 저장(개인정보 최소 수집). 분포 분석용 비식별 값만 전송.
+      // 퍼널 이벤트(비식별)는 events 테이블로. 개인정보는 submission 으로 별도 저장.
       track("form_submit", {
         role: data.role,
         company_size: data.company_size,
@@ -272,26 +302,24 @@ var CONTACT_EMAIL = "soyunbag066@gmail.com";
 
       function done() { submitBtn.disabled = false; submitBtn.textContent = "신청하고 무료 진단 받기"; showDone(); }
 
-      if (FORM_ENDPOINT) {
-        fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify(data)
-        }).then(function (res) {
-          if (!res.ok) throw new Error("bad status");
-          done();
-        }).catch(function () {
-          // 전송 실패 → 로컬엔 이미 저장됨 + mailto 폴백 안내
-          submitBtn.disabled = false;
-          submitBtn.textContent = "신청하고 무료 진단 받기";
-          errorBox.innerHTML = '전송이 일시적으로 실패했습니다. 신청 내용은 안전하게 저장되었습니다. ' +
-            '<a href="' + mailtoFallback(data) + '">이메일로 직접 신청하기</a>';
-          errorBox.hidden = false;
-        });
-      } else {
-        // 엔드포인트 미설정 → 로컬 저장 완료로 간주하고 완료 화면 표시
+      // 큐에 쌓인 이벤트 + 이번 폼 제출을 한 요청으로 전송.
+      var pendingEvents = queue.splice(0, queue.length);
+      fetch(INGEST_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ submission: data, events: pendingEvents }),
+        keepalive: true
+      }).then(function (res) {
+        if (!res.ok) throw new Error("bad status");
         done();
-      }
+      }).catch(function () {
+        // 전송 실패 → 로컬엔 이미 저장됨 + mailto 폴백 안내
+        submitBtn.disabled = false;
+        submitBtn.textContent = "신청하고 무료 진단 받기";
+        errorBox.innerHTML = '전송이 일시적으로 실패했습니다. 신청 내용은 안전하게 저장되었습니다. ' +
+          '<a href="' + mailtoFallback(data) + '">이메일로 직접 신청하기</a>';
+        errorBox.hidden = false;
+      });
     });
   }
 
@@ -385,7 +413,7 @@ var CONTACT_EMAIL = "soyunbag066@gmail.com";
     var c = document.getElementById("contactLink");
     if (c) { c.href = "mailto:" + CONTACT_EMAIL; c.textContent = CONTACT_EMAIL; }
 
-    initAnalytics();
+    bindFlushLifecycle();
     bindPageView();
     bindScrollDepth();
     bindCtaClicks();
