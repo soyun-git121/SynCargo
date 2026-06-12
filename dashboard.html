@@ -27,7 +27,7 @@
     button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 
     .src{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:4px 11px;border-radius:999px;margin-top:8px}
-    .src.posthog{background:#e7f6ee;color:var(--green)}
+    .src.supabase{background:#e7f6ee;color:var(--green)}
     .src.local{background:#fff3da;color:var(--org7)}
     .src .d{width:7px;height:7px;border-radius:50%;background:currentColor}
 
@@ -124,8 +124,9 @@
     <div class="card"><div class="dist" id="rawEvents"></div></div>
 
     <p class="muted" style="margin-top:24px;font-size:.82rem">
-      ※ 회사명·이메일·연락처 등 개인정보는 PostHog에 저장하지 않습니다(개인정보 최소 수집).
-      신청자 <b>연락처 명단</b>은 <a href="https://formspree.io/forms" target="_blank" rel="noopener" style="color:var(--org7)">Formspree 대시보드</a>에서 확인하세요.
+      ※ 폼 응답·행동 이벤트·연락처가 모두 <b>Supabase</b> 한 곳에 저장됩니다.
+      원본은 <a href="https://supabase.com/dashboard/project/_/editor" target="_blank" rel="noopener" style="color:var(--org7)">Supabase Table Editor</a>의
+      <code>submissions</code> / <code>events</code> 테이블에서 확인하세요.
     </p>
   </div>
 
@@ -145,7 +146,7 @@
         var d = await res.json();
         if(!res.ok || d.error) throw new Error(d.error || ("HTTP "+res.status));
         return {
-          source:"posthog",
+          source:d.source||"supabase",
           counts:d.eventCounts||{},
           scroll:d.scrollDepth||{},
           subs:d.submissions||[],
@@ -186,10 +187,10 @@
       // 소스 배지 + 배너
       var src=document.getElementById("src");
       src.style.display="inline-flex";
-      if(m.source==="posthog"){
-        src.className="src posthog"; src.innerHTML='<span class="d"></span>PostHog · 전체 방문자 집계';
+      if(m.source!=="local"){
+        src.className="src supabase"; src.innerHTML='<span class="d"></span>Supabase · 전체 방문자 집계';
         document.getElementById("banner").innerHTML =
-          '<div class="note">✅ <b>전체 방문자 데이터</b>를 PostHog에서 실시간으로 불러옵니다. 팀원 누구나 이 주소로 같은 화면을 봅니다.</div>';
+          '<div class="note">✅ <b>전체 방문자 데이터</b>를 Supabase에서 실시간으로 불러옵니다. 팀원 누구나 이 주소로 같은 화면을 봅니다.</div>';
       }else{
         src.className="src local"; src.innerHTML='<span class="d"></span>로컬 · 이 기기만';
         var msg = m.serverError
@@ -237,8 +238,8 @@
       var dists=document.getElementById("dists"); dists.innerHTML="";
       dists.appendChild(distCard("직원 수 (세그먼트 핵심)", tally(S,"company_size"), "10~50"));
       dists.appendChild(distCard("직책 (구매자=대표 검증)", tally(S,"role")));
-      dists.appendChild(distCard("자주 발생하는 리스크 (복수)", tallyArr(S,"risks")));
-      dists.appendChild(distCard("맥락이 남는 곳 (복수)", tallyArr(S,"context_channels")));
+      dists.appendChild(distCard("실제로 겪은 일 (페인 검증, 복수)", tallyArr(S,"risks")));
+      dists.appendChild(distCard("합의 내용이 남는 곳 (복수)", tallyArr(S,"context_channels")));
       dists.appendChild(distCard("현재 메일 도구", tally(S,"mail_tool")));
       dists.appendChild(distCard("월평균 선적 건수", tally(S,"shipments")));
       dists.appendChild(distCard("인터뷰 참여 의향", tally(S,"interview_ok")));
@@ -311,9 +312,8 @@
     function fmtTime(v){ if(!v) return "—"; var d=new Date(v); return isNaN(d)?esc(v):d.toLocaleString("ko-KR"); }
     function renderSubs(m, S){
       document.getElementById("subCount2").textContent="("+S.length+"건)";
-      var local = (m.source==="local");
-      // 로컬 모드엔 회사명·이메일·연락처가 있으나, PostHog 모드엔 개인정보 미수집 → 비식별 항목만
-      var cols = (local ? ["회사명","이메일","연락처"] : [])
+      // Supabase·로컬 모두 회사명·이메일·연락처(PII)를 저장하므로 항상 표시.
+      var cols = ["회사명","이메일","연락처"]
         .concat(["시각","직책/연차","직원수","선적량","메일도구","리스크","맥락","인터뷰","퇴사경험"]);
       document.getElementById("subsHead").innerHTML =
         "<tr>"+cols.map(function(c){return "<th>"+c+"</th>"}).join("")+"</tr>";
@@ -324,7 +324,7 @@
         return;
       }
       body.innerHTML = S.map(function(s){
-        var cells = (local ? [s.company, s.email, s.phone] : []).concat([
+        var cells = [s.company, s.email, s.phone].concat([
           fmtTime(s.submitted_at), s.role, s.company_size, s.shipments, s.mail_tool,
           (s.risks||[]).join(", "), (s.context_channels||[]).join(", "), s.interview_ok, s.churn_experience
         ]);

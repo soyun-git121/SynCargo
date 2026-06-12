@@ -33,9 +33,9 @@
   </g>
 
   <!-- 헤드라인 -->
-  <text x="96" y="332" font-family="Pretendard, sans-serif" font-size="60" font-weight="700" fill="#16223f" letter-spacing="-2">직원이 퇴사해도,</text>
-  <rect x="92" y="372" width="712" height="26" fill="#F5A623" opacity="0.3"/>
-  <text x="96" y="402" font-family="Pretendard, sans-serif" font-size="60" font-weight="700" fill="#16223f" letter-spacing="-2">화주와의 관계는 회사에 남습니다</text>
+  <text x="96" y="332" font-family="Pretendard, sans-serif" font-size="60" font-weight="700" fill="#16223f" letter-spacing="-2">포워더에게 메일은</text>
+  <rect x="92" y="372" width="640" height="26" fill="#F5A623" opacity="0.3"/>
+  <text x="96" y="402" font-family="Pretendard, sans-serif" font-size="60" font-weight="700" fill="#16223f" letter-spacing="-2">소통이 아니라, 돈입니다</text>
 
   <!-- 서브 -->
   <text x="96" y="478" font-family="Pretendard, sans-serif" font-size="25" font-weight="400" fill="#626c80">Outlook 뒤에 붙는 AI 업무 레이어 · 흩어진 맥락을 B/L 단위 회사 자산으로</text>
