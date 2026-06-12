@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>SynCargo — 유입·전환 검증 대시보드</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    :root{
+      --navy:#16223f; --ink:#2b3346; --soft:#626c80; --faint:#9aa2b1;
+      --line:#e7eaf0; --bg:#f6f7f9; --orange:#F5A623; --org7:#e0930f;
+      --red:#E04E2F; --green:#1f9d57; --r:14px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Pretendard",-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px;-webkit-font-smoothing:antialiased}
+    .wrap{max-width:1080px;margin:0 auto;padding:32px 24px 80px}
+    h1{font-size:1.5rem;color:var(--navy);margin:0;letter-spacing:-.02em}
+    h2{font-size:1.05rem;color:var(--navy);margin:36px 0 14px;letter-spacing:-.01em}
+    .sub{color:var(--soft);font-size:.9rem;margin-top:4px}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}
+    button{font-family:inherit;font-size:.85rem;font-weight:600;padding:9px 14px;border-radius:9px;border:1.5px solid var(--line);background:#fff;color:var(--navy);cursor:pointer;transition:border-color .12s}
+    button:hover{border-color:var(--navy)}
+    button.danger{color:var(--red)}
+    button.danger:hover{border-color:var(--red)}
+    button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+    .src{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:4px 11px;border-radius:999px;margin-top:8px}
+    .src.posthog{background:#e7f6ee;color:var(--green)}
+    .src.local{background:#fff3da;color:var(--org7)}
+    .src .d{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+    .note{background:#fff7ea;border:1px solid #f6dba6;color:#7a5b14;border-radius:var(--r);padding:14px 16px;font-size:.86rem;margin-top:20px}
+    .note b{color:var(--org7)}
+    .note.err{background:#fdece7;border-color:#f3c9bf;color:#8a3a29}
+
+    .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px}
+    .kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px 16px}
+    .kpi .n{font-size:1.7rem;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+    .kpi .l{font-size:.78rem;color:var(--faint);margin-top:2px}
+
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;margin-top:14px}
+
+    .funnel{display:flex;flex-direction:column;gap:10px}
+    .frow{display:grid;grid-template-columns:160px 1fr 110px;gap:14px;align-items:center}
+    .frow .lab{font-size:.88rem;color:var(--soft)}
+    .bar{height:30px;background:#eef1f6;border-radius:7px;overflow:hidden}
+    .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--navy),#33507f);border-radius:7px;transition:width .5s ease}
+    .bar.accent > i{background:linear-gradient(90deg,var(--org7),var(--orange))}
+    .frow .val{font-size:.85rem;color:var(--navy);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+    .frow .val small{color:var(--faint);font-weight:400}
+
+    table{width:100%;border-collapse:separate;border-spacing:0;font-size:.88rem}
+    th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+    th{color:var(--faint);font-weight:600;font-size:.78rem;letter-spacing:.03em}
+    td.num{text-align:right;font-variant-numeric:tabular-nums}
+    .pill{display:inline-block;font-size:.74rem;font-weight:700;padding:3px 10px;border-radius:999px}
+    .pill.pass{background:#e7f6ee;color:var(--green)}
+    .pill.fail{background:#fdece7;color:var(--red)}
+    .pill.na{background:#eef1f6;color:var(--faint)}
+
+    .dist{display:flex;flex-direction:column;gap:8px}
+    .drow{display:grid;grid-template-columns:150px 1fr 56px;gap:12px;align-items:center;font-size:.85rem}
+    .drow .lab{color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .dbar{height:20px;background:#eef1f6;border-radius:5px;overflow:hidden}
+    .dbar>i{display:block;height:100%;background:var(--orange);border-radius:5px}
+    .dbar.cool>i{background:#5B7799}
+    .drow .c{text-align:right;color:var(--navy);font-weight:600;font-variant-numeric:tabular-nums}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .empty{color:var(--faint);font-size:.88rem;padding:8px 0}
+    .muted{color:var(--faint)}
+    #subsTable{font-size:.82rem;min-width:100%}
+    #subsTable th{position:sticky;top:0;background:#f6f7f9;white-space:nowrap;padding:12px 14px;border-bottom:1px solid var(--line)}
+    #subsTable td{white-space:nowrap;padding:11px 14px}
+    #subsTable tbody tr:hover{background:#fafbfc}
+    @media(max-width:760px){
+      .kpis{grid-template-columns:1fr 1fr}
+      .grid2{grid-template-columns:1fr}
+      .frow{grid-template-columns:110px 1fr 86px}
+      .drow{grid-template-columns:110px 1fr 46px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>SynCargo — 유입·전환 검증 대시보드</h1>
+        <p class="sub" id="meta">데이터 불러오는 중…</p>
+        <span class="src" id="src" style="display:none"></span>
+      </div>
+      <div class="btns">
+        <button class="primary" onclick="boot()">새로고침</button>
+        <button onclick="exportData()">내 기기 JSON 내보내기</button>
+      </div>
+    </div>
+
+    <div id="banner"></div>
+
+    <h2>핵심 지표</h2>
+    <div class="kpis" id="kpis"></div>
+
+    <h2>전환 퍼널</h2>
+    <div class="card"><div class="funnel" id="funnel"></div></div>
+
+    <h2>성공 기준 (CLAUDE.md §1 · 4주 가이드라인)</h2>
+    <div class="card">
+      <table>
+        <thead><tr><th>기준</th><th class="num">실제</th><th class="num">목표</th><th style="text-align:center">판정</th></tr></thead>
+        <tbody id="criteria"></tbody>
+      </table>
+    </div>
+
+    <h2>폼 응답 분포 <span class="muted" id="subCount"></span></h2>
+    <div class="grid2" id="dists"></div>
+
+    <h2>폼 응답 전체 <span class="muted" id="subCount2"></span></h2>
+    <div class="card" style="overflow-x:auto;padding:0">
+      <table id="subsTable"><thead id="subsHead"></thead><tbody id="subsBody"></tbody></table>
+    </div>
+
+    <h2>이벤트 원본 카운트</h2>
+    <div class="card"><div class="dist" id="rawEvents"></div></div>
+
+    <p class="muted" style="margin-top:24px;font-size:.82rem">
+      ※ 회사명·이메일·연락처 등 개인정보는 PostHog에 저장하지 않습니다(개인정보 최소 수집).
+      신청자 <b>연락처 명단</b>은 <a href="https://formspree.io/forms" target="_blank" rel="noopener" style="color:var(--org7)">Formspree 대시보드</a>에서 확인하세요.
+    </p>
+  </div>
+
+  <script>
+    /* ============================================================
+       데이터 로딩: 1순위 서버 함수(PostHog 전체) → 실패 시 로컬 백업
+       ============================================================ */
+    // URL의 ?since=ISO 를 그대로 함수에 전달 (기준 시각 이후만 집계 → 그 전 데이터는 0)
+    function sinceParam(){
+      var s = new URLSearchParams(location.search).get("since");
+      return s ? ("?since=" + encodeURIComponent(s)) : "";
+    }
+
+    async function loadModel(){
+      try{
+        var res = await fetch("/.netlify/functions/metrics" + sinceParam(), { cache:"no-store" });
+        var d = await res.json();
+        if(!res.ok || d.error) throw new Error(d.error || ("HTTP "+res.status));
+        return {
+          source:"posthog",
+          counts:d.eventCounts||{},
+          scroll:d.scrollDepth||{},
+          subs:d.submissions||[],
+          since:d.since,
+          generated_at:d.generated_at,
+          error:null
+        };
+      }catch(e){
+        return Object.assign({ source:"local", serverError:String(e.message||e), since:null }, localModel());
+      }
+    }
+
+    function localModel(){
+      var E=[], S=[];
+      try{ E=JSON.parse(localStorage.getItem("sc_events")||"[]"); }catch(e){}
+      try{ S=JSON.parse(localStorage.getItem("sc_submissions")||"[]"); }catch(e){}
+      var counts={}, scroll={};
+      E.forEach(function(ev){
+        counts[ev.event]=(counts[ev.event]||0)+1;
+        if(ev.event==="scroll_depth" && ev.props && ev.props.depth!=null){
+          var k=String(ev.props.depth); scroll[k]=(scroll[k]||0)+1;
+        }
+      });
+      return { counts:counts, scroll:scroll, subs:S };
+    }
+
+    /* ============================================================
+       렌더
+       ============================================================ */
+    function cnt(c,n){ return c[n]||0; }
+    function pct(a,b){ return b>0 ? (a/b*100) : 0; }
+    function fmtPct(x){ return x.toFixed(1)+"%"; }
+    function esc(v){ return (v==null?"":String(v)).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]}); }
+
+    function render(m){
+      var c=m.counts, S=m.subs||[];
+
+      // 소스 배지 + 배너
+      var src=document.getElementById("src");
+      src.style.display="inline-flex";
+      if(m.source==="posthog"){
+        src.className="src posthog"; src.innerHTML='<span class="d"></span>PostHog · 전체 방문자 집계';
+        document.getElementById("banner").innerHTML =
+          '<div class="note">✅ <b>전체 방문자 데이터</b>를 PostHog에서 실시간으로 불러옵니다. 팀원 누구나 이 주소로 같은 화면을 봅니다.</div>';
+      }else{
+        src.className="src local"; src.innerHTML='<span class="d"></span>로컬 · 이 기기만';
+        var msg = m.serverError
+          ? '서버 연결 실패로 <b>이 기기의 로컬 데이터</b>만 표시 중입니다. (Netlify 환경변수 설정 + 함수 배포가 필요합니다.) <br><span class="muted">사유: '+esc(m.serverError)+'</span>'
+          : '현재 <b>이 기기의 로컬 데이터</b>만 표시 중입니다.';
+        document.getElementById("banner").innerHTML = '<div class="note err">⚠️ '+msg+'</div>';
+      }
+
+      var pv=cnt(c,"page_view");
+      var heroCta=cnt(c,"cta_hero_diagnosis_click")+cnt(c,"cta_hero_beta_click");
+      var roiCta=cnt(c,"cta_roi_diagnosis_click");
+      var pricing=cnt(c,"cta_pricing_click");
+      var totalCta=heroCta+roiCta+pricing;
+      var fStart=cnt(c,"form_start");
+      var fSubmit=cnt(c,"form_submit");
+
+      document.getElementById("meta").textContent =
+        "제출 "+S.length+"건"
+        + (m.since ? " · 기준시각 이후 집계: "+new Date(m.since).toLocaleString("ko-KR") : "")
+        + (m.generated_at ? " · 갱신 "+new Date(m.generated_at).toLocaleString("ko-KR") : "");
+
+      kpiRender([
+        ["방문(page_view)",pv],["Hero CTA 클릭",heroCta],["폼 시작",fStart],["폼 완료",fSubmit],["가격 안내 클릭",pricing]
+      ]);
+
+      var fmax=Math.max(pv,1);
+      funnelRender([
+        ["방문",pv,fmax,false,""],
+        ["CTA 클릭(전체)",totalCta,fmax,false,pv?fmtPct(pct(totalCta,pv)):""],
+        ["폼 시작",fStart,fmax,false,pv?fmtPct(pct(fStart,pv)):""],
+        ["폼 완료",fSubmit,fmax,true,pv?fmtPct(pct(fSubmit,pv)):""]
+      ]);
+
+      var size1050=S.filter(function(s){return s.company_size==="10~50"}).length;
+      var interviewYes=S.filter(function(s){return s.interview_ok==="예"}).length;
+      criteriaRender([
+        ["방문 → Hero CTA 클릭", pct(heroCta,pv), 8, "≥ 8%", pv>0],
+        ["CTA 클릭 → 폼 완료", pct(fSubmit,totalCta), 30, "≥ 30%", totalCta>0],
+        ["제출자 중 직원수 10~50인 비중", pct(size1050,S.length), 50, "≥ 50%", S.length>0],
+        ["가격 안내 클릭 (전체 방문 대비)", pct(pricing,pv), 3, "≥ 3%", pv>0],
+        ["인터뷰 수락 건수", interviewYes, 5, "≥ 5건", true, true]
+      ]);
+
+      document.getElementById("subCount").textContent="("+S.length+"명)";
+      var dists=document.getElementById("dists"); dists.innerHTML="";
+      dists.appendChild(distCard("직원 수 (세그먼트 핵심)", tally(S,"company_size"), "10~50"));
+      dists.appendChild(distCard("직책 (구매자=대표 검증)", tally(S,"role")));
+      dists.appendChild(distCard("자주 발생하는 리스크 (복수)", tallyArr(S,"risks")));
+      dists.appendChild(distCard("맥락이 남는 곳 (복수)", tallyArr(S,"context_channels")));
+      dists.appendChild(distCard("현재 메일 도구", tally(S,"mail_tool")));
+      dists.appendChild(distCard("월평균 선적 건수", tally(S,"shipments")));
+      dists.appendChild(distCard("인터뷰 참여 의향", tally(S,"interview_ok")));
+      dists.appendChild(distCard("최근 퇴사·이탈 경험", tally(S,"churn_experience")));
+
+      renderSubs(m, S);
+
+      var names=["page_view","scroll_depth","cta_hero_diagnosis_click","cta_hero_beta_click","cta_pricing_click","cta_roi_diagnosis_click","form_start","form_submit","form_abandon"];
+      var rawMax=Math.max.apply(null, names.map(function(n){return cnt(c,n)}).concat([1]));
+      var raw=document.getElementById("rawEvents"); raw.innerHTML="";
+      names.forEach(function(n){ raw.appendChild(distRow(n, cnt(c,n), rawMax, true)); });
+      [25,50,75,100].forEach(function(d){ raw.appendChild(distRow("scroll "+d+"%", m.scroll[String(d)]||0, rawMax, true)); });
+    }
+
+    /* ---------- helpers ---------- */
+    function kpiRender(rows){
+      document.getElementById("kpis").innerHTML = rows.map(function(r){
+        return '<div class="kpi"><div class="n">'+r[1]+'</div><div class="l">'+r[0]+'</div></div>';
+      }).join("");
+    }
+    function funnelRender(rows){
+      document.getElementById("funnel").innerHTML = rows.map(function(r){
+        var w=pct(r[1],r[2]);
+        return '<div class="frow"><span class="lab">'+r[0]+'</span>'+
+          '<span class="bar'+(r[3]?" accent":"")+'"><i style="width:'+w+'%"></i></span>'+
+          '<span class="val">'+r[1]+(r[4]?' <small>'+r[4]+'</small>':'')+'</span></div>';
+      }).join("");
+    }
+    function criteriaRender(rows){
+      document.getElementById("criteria").innerHTML = rows.map(function(r){
+        var label=r[0],actual=r[1],target=r[2],targetLab=r[3],valid=r[4],isCount=r[5];
+        var actualStr=isCount?actual+"건":fmtPct(actual);
+        var cls,txt;
+        if(!valid){cls="na";txt="데이터 부족";}
+        else if(actual>=target){cls="pass";txt="달성";}
+        else {cls="fail";txt="미달";}
+        return "<tr><td>"+label+"</td><td class='num'>"+(valid?actualStr:"—")+"</td><td class='num'>"+targetLab+
+          "</td><td style='text-align:center'><span class='pill "+cls+"'>"+txt+"</span></td></tr>";
+      }).join("");
+    }
+    function tally(S,key){
+      var m={}; S.forEach(function(s){ var v=s[key]||"(미응답)"; m[v]=(m[v]||0)+1; });
+      return Object.keys(m).map(function(k){return [k,m[k]]}).sort(function(a,b){return b[1]-a[1]});
+    }
+    function tallyArr(S,key){
+      var m={}; S.forEach(function(s){ (s[key]||[]).forEach(function(v){ m[v]=(m[v]||0)+1; }); });
+      return Object.keys(m).map(function(k){return [k,m[k]]}).sort(function(a,b){return b[1]-a[1]});
+    }
+    function distCard(title,rows,highlight){
+      var el=document.createElement("div"); el.className="card";
+      var max=Math.max.apply(null, rows.map(function(r){return r[1]}).concat([1]));
+      var inner='<div style="font-weight:600;color:var(--navy);margin-bottom:12px;font-size:.92rem">'+title+'</div>';
+      if(!rows.length){ inner+='<div class="empty">데이터 없음</div>'; }
+      else{
+        inner+='<div class="dist">'+rows.map(function(r){
+          var w=r[1]/max*100, hi=(highlight&&r[0]===highlight);
+          return '<div class="drow"><span class="lab"'+(hi?' style="color:var(--org7);font-weight:700"':'')+'>'+esc(r[0])+
+            '</span><span class="dbar'+(hi?'':' cool')+'"><i style="width:'+w+'%"></i></span><span class="c">'+r[1]+'</span></div>';
+        }).join("")+'</div>';
+      }
+      el.innerHTML=inner; return el;
+    }
+    function distRow(label,val,max,cool){
+      var el=document.createElement("div"); el.className="drow";
+      el.innerHTML='<span class="lab">'+esc(label)+'</span><span class="dbar'+(cool?' cool':'')+'"><i style="width:'+(val/max*100)+'%"></i></span><span class="c">'+val+'</span>';
+      return el;
+    }
+
+    /* ---------- 폼 응답 전체 (건별 목록) ---------- */
+    function fmtTime(v){ if(!v) return "—"; var d=new Date(v); return isNaN(d)?esc(v):d.toLocaleString("ko-KR"); }
+    function renderSubs(m, S){
+      document.getElementById("subCount2").textContent="("+S.length+"건)";
+      var local = (m.source==="local");
+      // 로컬 모드엔 회사명·이메일·연락처가 있으나, PostHog 모드엔 개인정보 미수집 → 비식별 항목만
+      var cols = (local ? ["회사명","이메일","연락처"] : [])
+        .concat(["시각","직책/연차","직원수","선적량","메일도구","리스크","맥락","인터뷰","퇴사경험"]);
+      document.getElementById("subsHead").innerHTML =
+        "<tr>"+cols.map(function(c){return "<th>"+c+"</th>"}).join("")+"</tr>";
+
+      var body=document.getElementById("subsBody");
+      if(!S.length){
+        body.innerHTML='<tr><td colspan="'+cols.length+'" class="empty" style="padding:18px 14px">제출이 없습니다.</td></tr>';
+        return;
+      }
+      body.innerHTML = S.map(function(s){
+        var cells = (local ? [s.company, s.email, s.phone] : []).concat([
+          fmtTime(s.submitted_at), s.role, s.company_size, s.shipments, s.mail_tool,
+          (s.risks||[]).join(", "), (s.context_channels||[]).join(", "), s.interview_ok, s.churn_experience
+        ]);
+        return "<tr>"+cells.map(function(c){return "<td>"+esc(c||"—")+"</td>"}).join("")+"</tr>";
+      }).join("");
+    }
+
+    /* ---------- 내 기기 데이터 내보내기 (로컬 백업) ---------- */
+    function exportData(){
+      var E=[],S=[];
+      try{E=JSON.parse(localStorage.getItem("sc_events")||"[]")}catch(e){}
+      try{S=JSON.parse(localStorage.getItem("sc_submissions")||"[]")}catch(e){}
+      var blob=new Blob([JSON.stringify({events:E,submissions:S,exported_at:new Date().toISOString()},null,2)],{type:"application/json"});
+      var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+      a.download="syncargo-local-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+    }
+
+    /* ---------- boot ---------- */
+    function boot(){
+      document.getElementById("meta").textContent="데이터 불러오는 중…";
+      loadModel().then(render);
+    }
+    boot();
+  </script>
+</body>
+</html>

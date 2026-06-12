@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SynCargo — 사람이 나가도, 화주와의 관계는 회사에 남습니다</title>
+  <meta name="description" content="국내 10~50인 포워딩사를 위한 AI 업무 레이어. Outlook 뒤에 붙어, 직원 개인의 메일·기억·메모에 흩어진 화주 관계를 B/L 단위 회사 자산으로 정리합니다." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SynCargo — 사람이 나가도, 화주와의 관계는 회사에 남습니다" />
+  <meta property="og:description" content="흩어진 업무 맥락을 B/L 단위 회사 자산으로. 10~50인 포워딩사 비공개 베타 모집 중." />
+  <meta property="og:image" content="og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Pretendard -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ============ HEADER ============ -->
+  <!-- 공지 바 -->
+  <div class="announce">
+    <div class="container announce-inner">
+      <span class="announce-dot" aria-hidden="true"></span>
+      10~50인 포워딩사 대상 <strong>비공개 베타</strong>를 모집합니다 · 참여 기업에 무료 리스크 진단 제공
+      <a href="#signup" data-track="cta_hero_beta_click">신청하기 →</a>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#hero" class="brand" aria-label="SynCargo 홈">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">SynCargo</span>
+      </a>
+      <nav class="header-nav" id="primaryNav">
+        <a href="#problem">문제</a>
+        <a href="#solution">솔루션</a>
+        <a href="#features">기능</a>
+        <a href="#roi">ROI</a>
+        <a href="#faq">FAQ</a>
+        <a href="#signup" class="nav-cta" data-track="cta_hero_beta_click">베타 신청</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ SECTION 1 — HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="hero-badges">
+            <span class="badge">Outlook 교체 없음</span>
+            <span class="badge">ERP 연동 없이 시작</span>
+            <span class="badge badge-accent">10~50인 포워딩사 비공개 베타 모집 중</span>
+          </div>
+          <h1 class="hero-headline">회사의 가장 큰 자산이,<br /><span class="hl-accent">지금 직원 메일함에 잠겨 있습니다</span></h1>
+          <p class="hero-sub">
+            12년 키운 회사의 가장 큰 자산은 화주 관계입니다. 그런데 그 실체는 담당 직원의
+            메일함과 기억 속에 있습니다. SynCargo는 Outlook 뒤에 붙어, 흩어진 업무 맥락을
+            <strong>B/L 회사 자산</strong>으로 정리합니다.
+          </p>
+          <div class="hero-cta">
+            <a href="#signup" class="btn btn-accent" data-track="cta_hero_diagnosis_click">무료 리스크 진단 신청</a>
+            <a href="#signup" class="btn btn-secondary" data-track="cta_hero_beta_click">비공개 베타 참여하기</a>
+          </div>
+          <p class="hero-trust">Outlook·기존 BL 프로그램 교체 없이 시작 · 설치형 연동 불필요</p>
+        </div>
+
+        <!-- 목업 ① Outlook 작성창 + SynCargo 패널 + 발송 전 경고 토스트 -->
+        <div class="hero-mockup" aria-hidden="true">
+          <div class="mock-window mock-outlook">
+            <div class="mock-titlebar">
+              <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+              <span class="mock-title">새 메일 — Outlook</span>
+            </div>
+            <div class="mock-mailfields">
+              <div class="mock-field"><span>받는 사람</span><em>shanghai-trade@buyer.co.kr</em></div>
+              <div class="mock-field"><span>제목</span><em>RE: 상하이 LCL 선적 일정 및 서류 안내</em></div>
+            </div>
+            <div class="mock-mailbody">
+              안녕하세요, 말씀주신 상하이 LCL 건 진행 상황 공유드립니다.<br />
+              선적 스케줄은 예정대로이며, 관련 서류는 첨부<span class="cursor"></span>
+            </div>
+            <div class="mock-toast" role="presentation">
+              <span class="toast-icon">!</span>
+              <div>
+                <strong>발송 전 확인</strong>
+                <p>이 화주는 C/O 누락 시 페널티 이력이 있습니다.</p>
+                <a class="toast-link">근거 메일 보기 →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="mock-panel">
+            <div class="mock-panel-head">
+              <span class="panel-tag">SynCargo</span>
+              <span class="panel-sub">화주 컨텍스트</span>
+            </div>
+            <div class="panel-row">
+              <span class="panel-label">최근 3건</span>
+              <span class="panel-val">상하이 LCL · 닝보 FCL · 칭다오 LCL</span>
+            </div>
+            <div class="panel-row">
+              <span class="panel-label">주의 이력</span>
+              <span class="panel-val warn">C/O 누락 1회 (페널티 발생)</span>
+            </div>
+            <div class="panel-row">
+              <span class="panel-label">약속</span>
+              <span class="panel-val">Free Time 연장 (5/2 메일)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 기존 도구와 함께 동작 (정직한 호환성 표기) -->
+      <div class="container toolband">
+        <span class="toolband-label">이미 쓰는 도구를 바꾸지 않습니다</span>
+        <ul class="toolband-list">
+          <li>Microsoft Outlook</li>
+          <li>Microsoft 365</li>
+          <li>네이버웍스</li>
+          <li>기존 BL · 정산 프로그램</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 2 — 문제 제기 ============ -->
+    <section class="problem" id="problem">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">문제</span>
+          <h2 class="section-title">임차 구조의 청구서는 세 번 날아옵니다</h2>
+          <p class="section-lead">
+            직원의 메일함과 기억을 빌려 쓰는 구조에서는, 같은 비용이 형태만 바꿔 반복해서 청구됩니다.
+          </p>
+        </div>
+
+        <div class="card-grid card-grid-3">
+          <article class="card card-problem">
+            <span class="card-kicker">퇴사 — 임차 종료</span>
+            <p>직원이 나가면 관계의 실체가 함께 나갑니다. 신입이 1인분이 되기까지 1년, 사수의 시간도 함께 묶입니다.</p>
+          </article>
+          <article class="card card-problem">
+            <span class="card-kicker">채용 — 신규 임차</span>
+            <p>새 직원은 맥락 제로에서 시작합니다. 회사가 이미 산 지식을 매번 다시 삽니다.</p>
+          </article>
+          <article class="card card-problem">
+            <span class="card-kicker">분쟁 — 임차 클레임</span>
+            <p>약속의 증거가 개인 메일함에 흩어져 있어 증거 수집에 1~2주. 못 찾으면 관행적 귀책 구조대로 회사가 부담합니다.</p>
+          </article>
+        </div>
+
+        <h3 class="subsection-title">실무자에게는 이렇게 보입니다</h3>
+        <div class="card-grid card-grid-3">
+          <article class="card card-empathy">
+            <p>한 건의 현황이 메일함 속에 흩어져 있어, 건당 5~30분씩 과거 메일을 뒤집니다.</p>
+          </article>
+          <article class="card card-empathy">
+            <p>담당자가 바뀌면 후임자는 과거 메일을 처음부터 다시 읽습니다. 같은 실수가 반복됩니다.</p>
+          </article>
+          <article class="card card-empathy">
+            <p>서류 누락·조건 누락이 실무자 귀책으로 돌아옵니다. D&amp;D, 체화료, 사후 증명 부담.</p>
+          </article>
+        </div>
+
+        <p class="problem-closer">
+          포워딩 실수는 대부분 새로운 문제가 아닙니다. <span class="hl-accent">답은 이미 과거 메일 어딘가에 있었지만,
+          아무도 제때 찾지 못했을 뿐</span>입니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 3 — 솔루션 ============ -->
+    <section class="solution" id="solution">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">솔루션</span>
+          <h2 class="section-title">Outlook은 그대로. 뒤에 레이어만 붙입니다</h2>
+        </div>
+        <div class="steps steps-connected">
+          <article class="step">
+            <span class="step-num">1</span>
+            <h3>맥락 자동 수집<small>Invisible Capture</small></h3>
+            <p>Outlook 메일·첨부를 자동 수집합니다. 실무자는 기존처럼 일하면 됩니다.</p>
+            <p class="step-note">카톡 요지·통화 메모를 케이스에 붙이는 '맥락 첨부'는 베타에서 함께 검증 중입니다.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">2</span>
+            <h3>업무 가이드 정리<small>Dynamic SOP</small></h3>
+            <p>과거 메일과 문서에서 화주별·라우트별·선사별 주의 패턴을 찾아 업무 가이드 초안으로 정리합니다. 반영 여부는 관리자가 승인합니다.</p>
+          </article>
+          <article class="step">
+            <span class="step-num">3</span>
+            <h3>발송 전 확인<small>Pre-Send Check</small></h3>
+            <p>메일 발송 전, 현재 내용과 과거 이력을 대조해 누락 가능성과 유사 사고를 알려드립니다.</p>
+            <p class="step-note">최종 판단은 항상 실무자가 합니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 4 — 주요 기능 ============ -->
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">기능</span>
+          <h2 class="section-title">맥락을 회사 자산으로 바꾸는 5가지</h2>
+        </div>
+        <div class="card-grid card-grid-feature">
+          <article class="card card-feature">
+            <span class="feature-icon" aria-hidden="true">🧾</span>
+            <h3>B/L 단위 타임라인</h3>
+            <p>흩어진 메일·첨부를 B/L·컨테이너 번호 기준으로 묶어 영업 약속→선적→이슈→대응을 한 흐름으로.</p>
+          </article>
+          <article class="card card-feature">
+            <span class="feature-icon" aria-hidden="true">🧠</span>
+            <h3>화주별 리스크 메모리</h3>
+            <p>과거 클레임·지연·추가 과금·누락 이력 기반 화주별 주의사항 자동 요약.</p>
+          </article>
+          <article class="card card-feature">
+            <span class="feature-icon" aria-hidden="true">✅</span>
+            <h3>발송 전 확인 지원</h3>
+            <p>누락 가능성이 있는 서류, 과거 유사 사례, 기피 조건을 발송 전에 안내.</p>
+          </article>
+          <article class="card card-feature">
+            <span class="feature-icon" aria-hidden="true">💬</span>
+            <h3>신입용 AI 가이드</h3>
+            <p>"이 화주 상하이 건 주의점 알려줘" → 과거 히스토리 기반 답변 + 근거 메일 링크 표시.</p>
+          </article>
+          <article class="card card-feature">
+            <span class="feature-icon" aria-hidden="true">📊</span>
+            <h3>관리자용 자산 잔고</h3>
+            <p>화주별로 쌓이는 회사 소유의 거래 기억과 반복 손실 지점을 대표가 한눈에.</p>
+          </article>
+        </div>
+
+        <!-- 목업 ② B/L 타임라인 + ③ 화주 리스크 메모리 -->
+        <div class="feature-mockups" aria-hidden="true">
+          <div class="mock-window mock-timeline">
+            <div class="mock-titlebar light">
+              <span class="chip">B/L · SHHK2406-1182</span>
+              <span class="mock-title">상하이 LCL · 컨테이너 #SZLU2841</span>
+            </div>
+            <ul class="timeline">
+              <li><span class="tl-dot"></span><time>04/18</time><div><strong>영업 약속</strong> Free Time 7일 → 10일 연장 합의 (메일)</div></li>
+              <li><span class="tl-dot"></span><time>04/25</time><div><strong>선적</strong> 상하이항 출항, ETA 05/01</div></li>
+              <li><span class="tl-dot warn"></span><time>04/29</time><div><strong>이슈</strong> C/O 서류 미첨부 — 화주 문의</div></li>
+              <li><span class="tl-dot ok"></span><time>04/30</time><div><strong>대응</strong> C/O 발급 완료, 재발송</div></li>
+            </ul>
+          </div>
+
+          <div class="mock-window mock-risk">
+            <div class="mock-titlebar light">
+              <span class="chip">화주 리스크 메모리</span>
+              <span class="mock-title">(주)부산무역</span>
+            </div>
+            <ul class="risk-list">
+              <li><span class="risk-badge red">누락</span> C/O 누락 시 페널티 발생 이력 1회</li>
+              <li><span class="risk-badge amber">지연</span> 닝보 라우트 통관 지연 평균 +2일</li>
+              <li><span class="risk-badge blue">약속</span> Free Time 연장 요청 잦음 — 사전 협의 권장</li>
+              <li><span class="risk-badge gray">선호</span> 인보이스 PDF + 엑셀 동시 발송 선호</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 5 — BEFORE / AFTER ============ -->
+    <section class="beforeafter" id="beforeafter">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Before / After</span>
+          <h2 class="section-title">같은 업무, 다른 결과</h2>
+        </div>
+        <table class="ba-table">
+          <thead>
+            <tr><th scope="col">기존 업무</th><th scope="col">SynCargo 도입 후</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-label="기존 업무">과거 메일을 사람이 직접 검색 (건당 5~30분)</td><td data-label="도입 후">B/L 기준 관련 히스토리 자동 연결</td></tr>
+            <tr><td data-label="기존 업무">사수가 신입에게 일일이 설명</td><td data-label="도입 후">과거 건이 교재가 되어 전력화 기간 단축</td></tr>
+            <tr><td data-label="기존 업무">서류 누락을 발송 후 발견</td><td data-label="도입 후">발송 전 누락 가능성 안내</td></tr>
+            <tr><td data-label="기존 업무">퇴사자 노하우가 함께 퇴사</td><td data-label="도입 후">화주별 업무 맥락이 회사 자산으로 축적</td></tr>
+            <tr><td data-label="기존 업무">분쟁 시 증거 수집에 1~2주</td><td data-label="도입 후">약속·대응·증거를 그 자리에서 소급 제시</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 6 — ROI ============ -->
+    <section class="roi" id="roi">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">ROI</span>
+          <h2 class="section-title">대표님은 이미 이 문제에 비용을 쓰고 계십니다</h2>
+          <p class="section-lead">
+            연봉 인상으로 사람을 잡고, 에이스의 시간으로 신입을 가르치고, 재교육에 1년을 씁니다.
+            가장 비싼 형태로요. SynCargo는 새 비용이 아니라 그 지출의 치환입니다.
+          </p>
+        </div>
+
+        <div class="roi-grid">
+          <div class="roi-card">
+            <span class="roi-num">연 2,000만원대</span>
+            <p>신입 1명이 1인분 되기까지 생산성 갭 + 사수 시간</p>
+            <span class="roi-label">추정</span>
+          </div>
+          <div class="roi-card">
+            <span class="roi-num">건당 수 시간~수일</span>
+            <p>분쟁 증거 찾기·실랑이에 드는 시간</p>
+            <span class="roi-label">실무자 인터뷰</span>
+          </div>
+          <div class="roi-card">
+            <span class="roi-num">1인당 연 1,000만원 규모</span>
+            <p>흩어진 맥락 재수집에 새는 시간</p>
+            <span class="roi-label">추정</span>
+          </div>
+          <div class="roi-card roi-card-sum">
+            <span class="roi-num">회사당 연 2,000만원대</span>
+            <p>보이지 않는 누수 (보수~공격 레인지 존재)</p>
+            <span class="roi-label">추정</span>
+          </div>
+        </div>
+
+        <p class="roi-aside">
+          여기에 더해, 화주 1곳이 이탈하면 연 매출 수천만~수억 원이 사라집니다.
+          이는 위 운영 누수와 별개의 손실입니다.
+        </p>
+
+        <div class="roi-cta">
+          <a href="#signup" class="btn btn-primary" data-track="cta_roi_diagnosis_click">우리 회사 누수 규모 진단받기</a>
+          <button type="button" class="btn btn-secondary" id="pricingBtn" data-track="cta_pricing_click">가격 안내 받기</button>
+        </div>
+        <p class="roi-pricing-note" id="pricingNote" hidden role="status">
+          가격은 비공개 베타 참여 기업에 규모에 맞춰 개별 안내드립니다.
+          <a href="#signup">베타 신청하고 가격 안내받기 →</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">자주 묻는 질문</span>
+          <h2 class="section-title">궁금하실 만한 것들</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>기존 Outlook이나 BL 프로그램을 바꿔야 하나요?<span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>아니요. SynCargo는 교체가 아니라 뒤에 붙는 레이어입니다. 실무자는 기존처럼 Outlook으로 일하고, 결과 서류는 기존 BL·정산 프로그램에 그대로 둡니다.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>메일 내용을 수집한다는데, 보안은 어떻게 되나요?<span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>수집 범위와 보관 방식은 베타 참여 기업과 사전에 합의한 범위 안에서만 동작하도록 설계 중입니다. 구체적인 데이터 처리 방식은 무료 진단 미팅에서 함께 검토합니다.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>AI가 자동으로 메일을 막거나 보내나요?<span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>아니요. 발송 전 누락 가능성과 과거 유사 사례를 알려드릴 뿐, 발송 여부의 최종 판단은 항상 실무자가 합니다.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>카톡·전화로 오간 약속도 정리되나요?<span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>현재 베타는 메일·첨부를 중심으로 검증하고 있으며, 카톡 요지·통화 메모를 케이스에 붙이는 '맥락 첨부' 기능을 함께 검증 중입니다. 수요가 큰 채널부터 우선순위를 정합니다.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>비용은 얼마인가요?<span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>가격은 회사 규모에 맞춰 베타 참여 기업에 개별 안내드립니다. 베타 신청 시 진단 미팅에서 함께 논의합니다.</p></div>
+          </details>
+          <details class="faq-item">
+            <summary>우리 회사도 대상인가요?<span class="faq-mark" aria-hidden="true"></span></summary>
+            <div class="faq-body"><p>비공개 베타는 국내 10~50인 규모 포워딩사부터 순차 오픈합니다. 그 외 규모도 신청은 가능하며, 오픈 시 안내드립니다.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 8 — FAKE DOOR CTA + 폼 ============ -->
+    <section class="signup" id="signup">
+      <div class="container signup-inner">
+        <div class="signup-banner">
+          <span class="eyebrow">비공개 베타 모집</span>
+          <h2 class="section-title">먼저 합류하고, 무료 진단 받으세요</h2>
+          <p>
+            SynCargo는 현재 비공개 베타를 준비 중입니다. 아래 정보를 남겨주시면 베타 오픈 시
+            우선 연락드리고, 귀사의 메일 업무 리스크를 <strong>무료로 진단</strong>해 드립니다.
+          </p>
+        </div>
+
+        <form class="signup-form" id="signupForm" novalidate>
+          <div class="field">
+            <label for="company">회사명 <span class="opt">(선택)</span></label>
+            <input type="text" id="company" name="company" autocomplete="organization" />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="name">이름 <span class="req">*</span></label>
+              <input type="text" id="name" name="name" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="role">직책 / 연차 <span class="req">*</span></label>
+              <select id="role" name="role" required>
+                <option value="">선택</option>
+                <option value="대표/임원">대표 / 임원</option>
+                <option value="1년차">1년차</option>
+                <option value="2년차">2년차</option>
+                <option value="3년차">3년차</option>
+                <option value="4년차">4년차</option>
+                <option value="5년차">5년차</option>
+                <option value="6년차 이상">6년차 이상</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="email">이메일 <span class="req">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="phone">연락처 <span class="opt">(선택)</span></label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" />
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="company_size">직원 수 <span class="req">*</span></label>
+              <select id="company_size" name="company_size" required>
+                <option value="">선택</option>
+                <option value="1~5">1~5명</option>
+                <option value="6~9">6~9명</option>
+                <option value="10~50">10~50명</option>
+                <option value="51+">51명 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="shipments">월평균 선적 건수 <span class="req">*</span></label>
+              <select id="shipments" name="shipments" required>
+                <option value="">선택</option>
+                <option value="~30">~30건</option>
+                <option value="31~100">31~100건</option>
+                <option value="101~300">101~300건</option>
+                <option value="300+">300건 이상</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="mail_tool">현재 메일 도구 <span class="req">*</span></label>
+            <select id="mail_tool" name="mail_tool" required>
+              <option value="">선택</option>
+              <option value="Outlook(M365)">Outlook (M365)</option>
+              <option value="네이버웍스">네이버웍스</option>
+              <option value="다음·기타">다음 · 기타 웹메일</option>
+              <option value="자체메일">자체 메일 서버</option>
+            </select>
+          </div>
+
+          <fieldset class="field field-check">
+            <legend>가장 자주 발생하는 리스크 <span class="req">*</span> <small>(복수 선택)</small></legend>
+            <div class="check-grid">
+              <label><input type="checkbox" name="risks" value="서류 누락" /> 서류 누락</label>
+              <label><input type="checkbox" name="risks" value="D&D·체화료" /> D&amp;D · 체화료</label>
+              <label><input type="checkbox" name="risks" value="클레임·분쟁" /> 클레임 · 분쟁</label>
+              <label><input type="checkbox" name="risks" value="신입 실수" /> 신입 실수</label>
+              <label><input type="checkbox" name="risks" value="퇴사자 인수인계" /> 퇴사자 인수인계</label>
+              <label><input type="checkbox" name="risks" value="과거 메일 검색" /> 과거 메일 검색</label>
+              <label><input type="checkbox" name="risks" value="기타" /> 기타</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="field field-check">
+            <legend>업무 약속·맥락이 주로 남는 곳 <span class="req">*</span> <small>(복수 선택)</small></legend>
+            <div class="check-grid">
+              <label><input type="checkbox" name="context_channels" value="메일" /> 메일</label>
+              <label><input type="checkbox" name="context_channels" value="카톡" /> 카톡</label>
+              <label><input type="checkbox" name="context_channels" value="전화·구두" /> 전화 · 구두</label>
+              <label><input type="checkbox" name="context_channels" value="개인 엑셀·수첩" /> 개인 엑셀 · 수첩</label>
+              <label><input type="checkbox" name="context_channels" value="FMS·BL프로그램" /> FMS · BL 프로그램</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="field field-radio">
+            <legend>최근 1~2년 내 담당자 퇴사 또는 화주 이탈 경험 <span class="opt">(선택)</span></legend>
+            <div class="radio-row">
+              <label><input type="radio" name="churn_experience" value="있다" /> 있다</label>
+              <label><input type="radio" name="churn_experience" value="없다" /> 없다</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="field field-radio">
+            <legend>무료 진단 인터뷰(30분) 참여 의향 <span class="req">*</span></legend>
+            <div class="radio-row">
+              <label><input type="radio" name="interview_ok" value="예" required /> 예</label>
+              <label><input type="radio" name="interview_ok" value="아니오" /> 아니오</label>
+            </div>
+          </fieldset>
+
+          <div class="field field-consent">
+            <label class="consent-label">
+              <input type="checkbox" id="consent" name="consent" required />
+              <span>개인정보 수집·이용에 동의합니다 <span class="req">*</span>
+                <button type="button" class="link-btn" id="openPrivacy">자세히 보기</button>
+              </span>
+            </label>
+          </div>
+
+          <div class="form-error" id="formError" role="alert" hidden></div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="submitBtn">신청하고 무료 진단 받기</button>
+
+          <p class="form-foot">제출 즉시 개인정보처리방침에 따라 안전하게 보관되며, 진단 목적 외 사용하지 않습니다.</p>
+        </form>
+
+        <!-- 제출 완료 화면 -->
+        <div class="signup-done" id="signupDone" hidden role="status">
+          <span class="done-check" aria-hidden="true">✓</span>
+          <h2>신청이 접수되었습니다</h2>
+          <p>영업일 기준 3일 내 진단 일정 안내 메일을 드립니다. 베타는 10~50인 포워딩사부터 순차 오픈됩니다.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <a href="#hero" class="brand" aria-label="SynCargo 홈">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">SynCargo</span>
+        </a>
+        <p class="footer-note">Outlook 뒤에 붙는 AI 업무 레이어. 흩어진 화주 관계의 맥락을 B/L 단위 회사 자산으로 정리합니다.</p>
+      </div>
+      <nav class="footer-col" aria-label="페이지 내 이동">
+        <h4>둘러보기</h4>
+        <a href="#problem">문제</a>
+        <a href="#solution">솔루션</a>
+        <a href="#features">기능</a>
+        <a href="#roi">ROI</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="footer-col">
+        <h4>문의 · 정책</h4>
+        <a id="contactLink" href="mailto:soyunbag066@gmail.com">soyunbag066@gmail.com</a>
+        <button type="button" class="link-btn" id="openPrivacyFooter">개인정보처리방침</button>
+        <a href="#signup" class="footer-cta" data-track="cta_hero_beta_click">비공개 베타 신청 →</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span class="copyright">© 2026 SynCargo</span>
+      <span class="footer-disclaimer">본 서비스는 출시 준비 중이며, 기재된 기능은 베타에서 변경될 수 있습니다.</span>
+    </div>
+  </footer>
+
+  <!-- 모바일 하단 고정 CTA -->
+  <div class="mobile-cta" id="mobileCta" aria-hidden="true">
+    <a href="#signup" class="btn btn-accent btn-block" data-track="cta_hero_beta_click">비공개 베타 신청하고 무료 진단받기</a>
+  </div>
+
+  <!-- ============ 개인정보 모달 ============ -->
+  <div class="modal" id="privacyModal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+      <button type="button" class="modal-close" data-close-modal aria-label="닫기">×</button>
+      <h2 id="privacyTitle">개인정보 수집·이용 동의</h2>
+      <table class="privacy-table">
+        <tr><th>수집 항목</th><td>회사명, 이름, 직책, 이메일, 연락처(선택), 직원 수, 월평균 선적 건수, 메일 도구, 업무 리스크·맥락 응답, 인터뷰 참여 의향</td></tr>
+        <tr><th>수집 목적</th><td>비공개 베타 안내, 무료 리스크 진단 일정 조율 및 인터뷰 진행</td></tr>
+        <tr><th>보유 기간</th><td>수집일로부터 2년 또는 베타 종료 후 파기 요청 시 즉시 파기</td></tr>
+      </table>
+      <p class="privacy-note">동의를 거부할 권리가 있으며, 거부 시 베타 신청 및 무료 진단 제공이 제한됩니다.</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
